@@ -15,7 +15,33 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
+from blog.views import HomeScreen
+
+
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('__debug__/', include('debug_toolbar.urls')),
+    path('summernote/', include('django_summernote.urls')),
+    path("accounts/", include("allauth.urls")),
+    path('teamMerchandise/', include(
+        'teamMerchandise.urls', namespace='teamMerchandise')),
+    path("players/", include("players.urls"), name="players"),
+    path('statistics/', views.statistics, name='statistics'),
+    path('schedule/', views.schedule, name='schedule'),
+    path('aboutus/', views.aboutus, name='aboutus'),
+    path('gallery/', views.gallery, name='gallery'),
+    path('contact/', views.contact, name='contact'),
+    path('signup/', views.signup, name='signup'),
+    path('success/', views.success, name='success'),
+    path('failure/', views.failure, name='failure'),
+    path("", HomeScreen.as_view(), name="HomeScreen")
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATIC_ROOT)
